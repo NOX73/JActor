@@ -7,20 +7,24 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     meta: { },
 
-    jasmine : {
-      options : {
-        specs : 'spec/*.js'
-      },
-      src : [
-        'src/JActor.js',
-      ]
+    jasmine_node: {
+      specFolders: ['./spec'],
+      specNameMatcher: "spec", // load only specs containing specNameMatcher
+      projectRoot: "./src",
+      useCoffee: true,
+      forceExit: true,
+      jUnit: {
+        useDotNotation: true,
+        consolidate: true
+      }
     }
+
 
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-jasmine-node');
 
-  grunt.registerTask('test', ['jasmine']);
+  grunt.registerTask('test', ['jasmine_node']);
   grunt.registerTask('default', ['test']);
 };

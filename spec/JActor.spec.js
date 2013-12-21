@@ -1,21 +1,35 @@
+var JActor = require("../src/JActor");
+
 describe('Headroom', function() {
 
-  it('Create actor', function() {
-    var res = false;
+  var jactor;
 
-    runs(function () {
-      JActor.go(function() {
-        res = true;
+  beforeEach(function() {
+    jactor = new JActor();
+  });
+
+  it('Create actor', function(done) {
+
+    runs(function() {
+      jactor.go(function() {
+        done()
       });
     });
 
-    waits(100);
+  });
 
-    runs(function () {
-      expect(res).toBeTruthy()
+  it('Send & Receive message', function(done) {
+    var res;
+    var message = { hello: "Hi" };
+
+    var actor = jactor.go(function() {
+      this.receive().then(function(m) {
+        expect(m).toBe(message);
+        done();
+      })
     });
 
-
-  });
+    actor.send(message);
+  })
 
 });
