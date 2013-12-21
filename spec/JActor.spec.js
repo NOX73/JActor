@@ -122,11 +122,53 @@ describe('Headroom', function() {
 
     setTimeout(
       function() {
-        for (var i = 10; i >= 0; i--) {
-          expect(m.pop()).toBe(i);
+        expect(m.length).toBe(11);
+        for (var i = 0; m.length; i++) {
+          expect(m.shift()).toBe(i);
         }
         done();
-      }, 100)
+      }, 100);
+
+  });
+
+  it('Actor ring.', function(done){
+
+    function init() {
+
+      this.receive().then(function(m) {
+        this.id = m.id || 1;
+
+        if (this.id < m.count) {
+          this.child = jactor.go(init);
+          this.child.send({ id: this.id + 1, first: m.first || this, count: m.count});
+        } else {
+          this.child = m.first
+        }
+
+        this.goto(work);
+      }.bind(this))
+
+    }
+
+    function work() {
+      this.receive().then(function(m) {
+        m.push(this.id);
+        this.child.send(m);
+        this.loop();
+      }.bind(this))
+    }
+
+    var actor = jactor.go(init);
+    var m = [];
+
+    actor.send({count: 20});
+    actor.send(m);
+
+    setTimeout(
+      function() {
+        expect(m.length > 0).toBeTruthy();
+        done();
+      }, 500);
 
   });
 
