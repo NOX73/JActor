@@ -1,0 +1,21 @@
+{
+  "name": "jactor.js",
+  "version": "0.0.1",
+  "description": "js Actor library",
+  "main": "dist/jactor.js",
+  "scripts": {
+    "test": "grunt test --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NOX73/JActor.git"
+  },
+
+  "author": "Nox73",
+  "license": "MIT",
+
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jasmine": "~0.5.1"
+  }
+}
