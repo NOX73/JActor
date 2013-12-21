@@ -19,7 +19,6 @@ describe('Headroom', function() {
   });
 
   it('Send & Receive message', function(done) {
-    var res;
     var message = { hello: "Hi" };
 
     var actor = jactor.go(function() {
@@ -31,5 +30,27 @@ describe('Headroom', function() {
 
     actor.send(message);
   })
+
+
+  it('Send & Receive message to list of actors', function(done) {
+    var message = { hello: "Hi" };
+
+    var actor = jactor.go(function() {
+      this.receive().then(function(m) {
+        expect(m).toBe(message);
+        done();
+      })
+    });
+
+    var actor2 = jactor.go(function() {
+      this.receive().then(function(m) {
+        expect(m).toBe(message);
+        actor.send(m)
+      })
+    });
+
+    actor2.send(message);
+  })
+
 
 });
