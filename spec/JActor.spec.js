@@ -86,7 +86,49 @@ describe('Headroom', function() {
       }, 100)
     }, 100)
 
-  })
+  });
+
+  it('Actors chain message send.', function(done) {
+
+    function init() {
+
+      this.receive().then(function(m) {
+        this.id = m;
+
+        if (m < 10) {
+          this.child = jactor.go(init);
+          this.child.send(m + 1);
+        }
+
+        this.goto(work);
+      }.bind(this))
+
+    }
+
+    function work() {
+      this.receive().then(function(m) {
+        m.push(this.id);
+        if (this.child) {
+          this.child.send(m);
+        }
+      }.bind(this))
+    }
+
+    var actor = jactor.go(init);
+    var m = [];
+
+    actor.send(0);
+    actor.send(m);
+
+    setTimeout(
+      function() {
+        for (var i = 10; i >= 0; i--) {
+          expect(m.pop()).toBe(i);
+        }
+        done();
+      }, 100)
+
+  });
 
 
 });

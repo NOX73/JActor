@@ -63,6 +63,11 @@ Actor.prototype = {
     this._ready()
   },
 
+  goto: function(f){
+    this._actor = f;
+    this.loop();
+  },
+
   _ready: function() {
     this._scheduler.actorReady(this);
   },
