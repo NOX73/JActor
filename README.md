@@ -1,0 +1,4 @@
+JActor
+======
+
+JS actors library
